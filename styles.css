@@ -6,6 +6,11 @@ body {
   padding: 0;
 }
 
+h1 {
+  font-size: 70px;
+  text-align: center;
+}
+
 .big-fact {
   background-image: url(images/wasteOnBeach.jpg);
   background-position: top;
@@ -65,15 +70,14 @@ footer {
   padding: 10px 20px;
 }
 
+.game-button {
+  text-align: right;
+}
+
 #canvas {
   background: black;
   padding-left: 0;
   padding-right: 0;
   margin: auto;
   display: block;
-}
-
-h1 {
-  font-size: 70px;
-  text-align: center;
 }
