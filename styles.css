@@ -1,5 +1,5 @@
 body {
-  background: rgb(0, 0, 134);
+  background: rgb(53, 56, 228);
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
@@ -45,9 +45,32 @@ h1 {
   padding-bottom: 50px;
 }
 
+.right-images {
+  text-align: left;
+  margin-right: 5%;
+  float: right;
+}
+
+.left-images {
+  text-align: right;
+  margin-left: 5%;
+  float: left;
+  padding-right: 50px;
+}
+
+.crop {
+  width: 600px;
+  height: 300px;
+  overflow: hidden;
+  text-align: left;
+  margin-right: 5%;
+  float: right;
+}
+
 h2 {
   font-size: 50px;
-  text-align: center;
+  text-align: left;
+  padding-left: 150px;
 }
 
 ul {
@@ -55,7 +78,8 @@ ul {
   margin-top: 30px;
   margin-bottom: 30px;
   padding: 0;
-  text-align: center;
+  text-align: left;
+  padding-left: 100px;
 }
 
 li {
@@ -75,6 +99,22 @@ footer {
   text-align: right;
   padding-right: 20px;
   padding-bottom: 15px;
+  cursor: pointer;
+}
+
+.game-button:hover {
+  opacity: 0.8;
+}
+
+.back-button {
+  text-align: right;
+  padding-right: 20px;
+  padding-bottom: 15px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  opacity: 0.8;
 }
 
 #canvas {
