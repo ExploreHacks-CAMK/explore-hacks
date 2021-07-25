@@ -27,15 +27,15 @@ h1 {
 .facts {
   background-color: black;
   margin: 0;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding-top: 25px;
+  padding-bottom: 75px;
 }
 
 .why-matters {
   background-color: rgb(54, 54, 54);
   margin: 0;
   padding-top: 50px;
-  padding-bottom: 50px;
+  padding-bottom: 7px;
 }
 
 .what-to-do {
@@ -47,15 +47,15 @@ h1 {
 
 .right-images {
   text-align: left;
-  margin-right: 5%;
+  margin-right: 6%;
   float: right;
 }
 
 .left-images {
   text-align: right;
-  margin-left: 5%;
+  margin-left: 4%;
   float: left;
-  padding-right: 50px;
+  padding-right: 70px;
 }
 
 .crop {
@@ -63,7 +63,7 @@ h1 {
   height: 300px;
   overflow: hidden;
   text-align: left;
-  margin-right: 5%;
+  margin-right: 4%;
   float: right;
 }
 
