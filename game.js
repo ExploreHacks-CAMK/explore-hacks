@@ -13,22 +13,34 @@ var wPressed = false;
 var sPressed = false;
 
 var buttons0 = []
+var buttons2 = []
 var trash = []
 buttons0.push(new sprites.Button(document.getElementById("button"), "Play", canvas.width / 2 - 50, canvas.height / 2 - 100, 100, 50, function() {
     panel = 1
+    reset()
+}))
+buttons2.push(new sprites.Button(document.getElementById("button"), "Main Menu", canvas.width / 2 - 50, canvas.height - 100, 100, 50, function() {
+    panel = 0
 }))
 var player = new sprites.Player(document.getElementById("player"), canvas.width/2, canvas.height/2, 50, 50)
 
-//Check if player is colliding if moving with velocity vX and vY
+function reset() {
+    speed = 7
+    runTime = 0
+    pickedUp = 0
+    delay = 60
+    trash = [];
+    player = new sprites.Player(document.getElementById("player"), canvas.width/2, canvas.height/2, 50, 50)
+    aPressed = false;
+    dPressed = false;
+    wPressed = false;
+    sPressed = false;
+}
 
 function draw() {
     if (!document.querySelector('#game').classList.contains('active')) {
         panel = 0
-        speed = 7
-        runTime = 0
-        pickedUp = 0
-        delay = 60
-        trash = [];
+        reset()
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -41,6 +53,7 @@ function draw() {
         })
     }
     else if (panel == 1) {
+        ctx.drawImage(document.getElementById("gameBackground"), 0, 0, canvas.width, canvas.height)
         runTime++;
         for(var i = 0; i < trash.length; i++) {
             trash[i].draw(ctx)
@@ -96,13 +109,39 @@ function draw() {
         } else
             player.setVX(player.getVX() * 0.5);
 
-        ctx.fillStyle = 'white'
+        ctx.font = 'bold 20px sans-serif'
         ctx.textAlign = "left"
-        ctx.fillText("Garbage Count: " + trash.length, 50, 50)
-        ctx.fillText("Picked Up: " + pickedUp, 50, 75)
         let minutes = Math.floor(runTime / 3600);
         let seconds = Math.floor(runTime / 60) - minutes*60;
+        ctx.fillStyle = 'black'
+        ctx.fillText("Garbage Count: " + trash.length, 51, 51)
+        ctx.fillText("Picked Up: " + pickedUp, 51, 76)
+        ctx.fillText("Time elapsed: " + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds), 51, 101)
+        ctx.fillStyle = 'white'
+        ctx.fillText("Garbage Count: " + trash.length, 50, 50)
+        ctx.fillText("Picked Up: " + pickedUp, 50, 75)
         ctx.fillText("Time elapsed: " + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds), 50, 100)
+        
+        if (trash.length >= 50) {
+            panel = 2;
+        }
+    }
+    else if (panel == 2) {
+        ctx.drawImage(document.getElementById("background"), 0, 0, canvas.width, canvas.height)
+        ctx.font = '100px sans-serif'
+        ctx.textAlign = "center"
+        ctx.fillStyle = 'red'
+        ctx.fillText("The Beach got\nOverpolluted!", canvas.width/2, canvas.height/2 - 50)
+        ctx.fillStyle = 'white'
+        let minutes = Math.floor(runTime / 3600);
+        let seconds = Math.floor(runTime / 60) - minutes*60;
+        ctx.font = '50px sans-serif'
+        ctx.fillText("You picked up " + pickedUp + " pieces of trash", canvas.width/2, canvas.height/2 + 50)
+        ctx.fillText("and lasted " + minutes + " minutes and " + seconds + " seconds.", canvas.width/2, canvas.height/2 + 100)
+        ctx.font = '20px sans-serif'
+        buttons2.forEach(button => {
+            button.draw(ctx);
+        })
     }
     
     ctx.closePath();
@@ -113,6 +152,11 @@ canvas.addEventListener('click', function(event) {
     if (document.querySelector('#game').classList.contains('active')) {
         if (panel == 0) {
             buttons0.forEach(button => {
+                button.click(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop)
+            })
+        }
+        else if (panel == 2) {
+            buttons2.forEach(button => {
                 button.click(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop)
             })
         }
