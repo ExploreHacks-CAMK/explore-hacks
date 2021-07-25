@@ -7,20 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="tabs.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <title>Website Title</title>
+    <title>Plastic Pollution</title>
   </head>
   <body>
     <div id="info" data-tab-content class="active">
       <h1>Plastic Pollution</h1>
-      <section class="game-button">
-        <img
-          src="images/circle_red.png"
-          id="game-button"
-          title="Play our Game!"
-          height="50px"
-          width="50px"
-        />
-      </section>
+      <div class="game-button-container">
+        <button type="button" id="game-button" title="Cleanup Game">Cleanup Game</button>
+      </div>
       <div class="big-fact">
         8 million tons of plastic leak into the ocean every year.
       </div>
@@ -71,15 +65,9 @@
           width="50px"
         />
       </div>
-      <section class="back-button">
-        <img
-          src="images/circle_red.png"
-          id="back-button"
-          title="Go Back"
-          height="50px"
-          width="50px"
-        />
-      </section>
+      <div class="back-button-container">
+        <button type="button" id="back-button" title="Go Back">Go Back</button>
+      </div>
     </div>
     <script type="module" src="sprites.js"></script>
     <script type="module" src="game.js"></script>
