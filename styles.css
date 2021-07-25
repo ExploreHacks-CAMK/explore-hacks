@@ -39,6 +39,7 @@ h1 {
 }
 
 .what-to-do {
+  background-color: rgb(53, 56, 228);
   margin: 0;
   padding-top: 50px;
   padding-bottom: 50px;
@@ -72,6 +73,8 @@ footer {
 
 .game-button {
   text-align: right;
+  padding-right: 20px;
+  padding-bottom: 15px;
 }
 
 #canvas {
