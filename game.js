@@ -2,8 +2,11 @@ import * as sprites from "./sprites.js"
 
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+var font = new FontFace('segoeui', 'url(images/segoeui.ttf)')
+await font.load()
+document.fonts.add(font);
 var speed = 7;
-var panel = 0; // 0 = Main menu, 1 = in game, 2 = game over screen
+var panel = 0; // 0 = Main menu, 1 = in game, 2 = game over screen, 3 = instructions
 var runTime = 0;
 var pickedUp = 0;
 var delay = 60; // spawn delay
@@ -12,16 +15,18 @@ var dPressed = false;
 var wPressed = false;
 var sPressed = false;
 
-var buttons0 = []
-var buttons2 = []
+var buttons = []
 var trash = []
-buttons0.push(new sprites.Button(document.getElementById("button"), "Play", canvas.width / 2 - 50, canvas.height / 2 - 100, 100, 50, function() {
+buttons.push(new sprites.Button(document.getElementById("button"), "Play", canvas.width / 2 - 50, canvas.height / 2 + 50, 100, 50, function() {
     panel = 1
     reset()
 }))
-buttons2.push(new sprites.Button(document.getElementById("button"), "Main Menu", canvas.width / 2 - 50, canvas.height - 100, 100, 50, function() {
-    panel = 0
+buttons.push(new sprites.Button(document.getElementById("button"), "How to Play", canvas.width / 2 - 65, canvas.height / 2 + 125, 130, 50, function() {
+    panel = 3
 }))
+var mainMenu = new sprites.Button(document.getElementById("button"), "Main Menu", canvas.width / 2 - 65, canvas.height - 100, 130, 50, function() {
+    panel = 0
+})
 var player = new sprites.Player(document.getElementById("player"), canvas.width/2, canvas.height/2, 50, 50)
 
 function reset() {
@@ -47,8 +52,12 @@ function draw() {
     ctx.beginPath();
     if (panel == 0) {
         ctx.drawImage(document.getElementById("background"), 0, 0, canvas.width, canvas.height)
-        ctx.font = '20px sans-serif'
-        buttons0.forEach(button => {
+        ctx.fillStyle = 'white'
+        ctx.font = 'italic 100px segoeui'
+        ctx.fillText("CLEANUP", canvas.width/2, canvas.height/2)
+        ctx.fillStyle = 'black'
+        ctx.font = '20px segoeui'
+        buttons.forEach(button => {
             button.draw(ctx);
         })
     }
@@ -109,18 +118,18 @@ function draw() {
         } else
             player.setVX(player.getVX() * 0.5);
 
-        ctx.font = 'bold 20px sans-serif'
+        ctx.font = 'bold 30px sans-serif'
         ctx.textAlign = "left"
         let minutes = Math.floor(runTime / 3600);
         let seconds = Math.floor(runTime / 60) - minutes*60;
         ctx.fillStyle = 'black'
         ctx.fillText("Garbage Count: " + trash.length, 51, 51)
-        ctx.fillText("Picked Up: " + pickedUp, 51, 76)
-        ctx.fillText("Time elapsed: " + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds), 51, 101)
+        ctx.fillText("Picked Up: " + pickedUp, 51, 81)
+        ctx.fillText("Time elapsed: " + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds), 51, 111)
         ctx.fillStyle = 'white'
         ctx.fillText("Garbage Count: " + trash.length, 50, 50)
-        ctx.fillText("Picked Up: " + pickedUp, 50, 75)
-        ctx.fillText("Time elapsed: " + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds), 50, 100)
+        ctx.fillText("Picked Up: " + pickedUp, 50, 80)
+        ctx.fillText("Time elapsed: " + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds), 50, 110)
         
         if (trash.length >= 50) {
             panel = 2;
@@ -128,20 +137,42 @@ function draw() {
     }
     else if (panel == 2) {
         ctx.drawImage(document.getElementById("background"), 0, 0, canvas.width, canvas.height)
-        ctx.font = '100px sans-serif'
+        ctx.font = 'italic 100px segoeui'
         ctx.textAlign = "center"
         ctx.fillStyle = 'red'
-        ctx.fillText("The Beach got\nOverpolluted!", canvas.width/2, canvas.height/2 - 50)
+        ctx.fillText("THE BEACH GOT", canvas.width/2, canvas.height/2 - 100)
+        ctx.fillText("OVERPOLLUTED!", canvas.width/2, canvas.height/2)
         ctx.fillStyle = 'white'
         let minutes = Math.floor(runTime / 3600);
         let seconds = Math.floor(runTime / 60) - minutes*60;
-        ctx.font = '50px sans-serif'
-        ctx.fillText("You picked up " + pickedUp + " pieces of trash", canvas.width/2, canvas.height/2 + 50)
-        ctx.fillText("and lasted " + minutes + " minutes and " + seconds + " seconds.", canvas.width/2, canvas.height/2 + 100)
-        ctx.font = '20px sans-serif'
-        buttons2.forEach(button => {
-            button.draw(ctx);
-        })
+        ctx.font = '40px segoeui'
+        ctx.fillText("You picked up " + pickedUp + " pieces of trash", canvas.width/2, canvas.height/2 + 75)
+        ctx.fillText("and lasted " + minutes + " minutes and " + seconds + " seconds.", canvas.width/2, canvas.height/2 + 115)
+        ctx.font = '20px segoeui'
+        ctx.fillStyle = 'black'
+        mainMenu.draw(ctx)
+    }
+    else if (panel == 3) {
+        ctx.drawImage(document.getElementById("background"), 0, 0, canvas.width, canvas.height)
+        // "Plastic is entering our oceans more and more every day. Your local beach is no different, so you have been hired to clean the beach from any pollution.
+        // Plastic appears randomly around the beach, and it's your job to spot it and remove it. Once the beach reaches a garbage count of 50,
+        // the beach becomes too overpolluted to deal with. Also, your speed and the rate at which trash enters the beach gradually increases, so be quick."
+        ctx.textAlign = "center"
+        ctx.fillStyle = 'white'
+        ctx.font = '30px segoeui'
+        ctx.fillText("Plastic is entering our oceans more and more every day.", canvas.width/2, 100)
+        ctx.fillText("Your local beach is no different, so you have been hired", canvas.width/2, 130)
+        ctx.fillText("to clean the beach from any pollution. Plastic appears", canvas.width/2, 160)
+        ctx.fillText("randomly around the beach, and it's your job to spot it", canvas.width/2, 190)
+        ctx.fillText("and remove it. Once the beach reaches a garbage count of 50,", canvas.width/2, 220)
+        ctx.fillText("the beach becomes too overpolluted to deal with. Also, your", canvas.width/2, 250)
+        ctx.fillText("speed and the rate at which trash enters the beach gradually", canvas.width/2, 280)
+        ctx.fillText("increases, so be quick.", canvas.width/2, 310)
+        ctx.fillText("WASD = movement", canvas.width/2, 400);
+        ctx.fillText("Good luck!", canvas.width/2, 520);
+        ctx.font = '20px segoeui'
+        ctx.fillStyle = 'black'
+        mainMenu.draw(ctx)
     }
     
     ctx.closePath();
@@ -151,14 +182,12 @@ setInterval(draw, 1/60 * 1000);
 canvas.addEventListener('click', function(event) {
     if (document.querySelector('#game').classList.contains('active')) {
         if (panel == 0) {
-            buttons0.forEach(button => {
+            buttons.forEach(button => {
                 button.click(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop)
             })
         }
-        else if (panel == 2) {
-            buttons2.forEach(button => {
-                button.click(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop)
-            })
+        else if (panel == 2 || panel == 3) {
+            mainMenu.click(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop)
         }
     }
 }, false)

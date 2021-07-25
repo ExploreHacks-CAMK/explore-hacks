@@ -18,7 +18,7 @@ class Button {
     draw(canvas) {
         canvas.textAlign = "center"
         canvas.drawImage(this.#image, this.#x, this.#y, this.#width, this.#height)
-        canvas.fillText(this.#text, this.#x + this.#width / 2, this.#y + this.#height / 2, this.#width)
+        canvas.fillText(this.#text, this.#x + this.#width / 2, this.#y + this.#height / 2 + 5, this.#width)
     }
     click(mouseX, mouseY) {
         if (this.#x <= mouseX && mouseX <= this.#x + this.#width && this.#y <= mouseY && mouseY <= this.#y + this.#height) {
