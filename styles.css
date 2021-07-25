@@ -45,9 +45,25 @@ h1 {
   padding-bottom: 50px;
 }
 
+.right-images {
+  text-align: left;
+  margin-right: 5%;
+  float: right;
+}
+
+.crop {
+  width: 600px;
+  height: 300px;
+  overflow: hidden;
+  text-align: left;
+  margin-right: 5%;
+  float: right;
+}
+
 h2 {
   font-size: 50px;
-  text-align: center;
+  text-align: left;
+  padding-left: 150px;
 }
 
 ul {
@@ -55,7 +71,8 @@ ul {
   margin-top: 30px;
   margin-bottom: 30px;
   padding: 0;
-  text-align: center;
+  text-align: left;
+  padding-left: 100px;
 }
 
 li {
