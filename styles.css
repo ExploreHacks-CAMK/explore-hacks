@@ -51,6 +51,13 @@ h1 {
   float: right;
 }
 
+.left-images {
+  text-align: right;
+  margin-left: 5%;
+  float: left;
+  padding-right: 50px;
+}
+
 .crop {
   width: 600px;
   height: 300px;
