@@ -1,94 +1,36 @@
-class Button {
-    #image;
-    #text;
-    #x;
-    #y;
-    #width;
-    #height;
-    #callback;
-    constructor(image, text, x, y, width, height, callback) {
-        this.#image = image;
-        this.#text = text;
-        this.#x = x;
-        this.#y = y;
-        this.#height = height
-        this.#width = width;
-        this.#callback = callback
-    }
-    draw(canvas) {
-        canvas.textAlign = "center"
-        canvas.fillText(this.#text, this.#x + this.#width / 2, this.#y + this.#height / 2, this.#width)
-        canvas.drawImage(this.#image, this.#x, this.#y, this.#width, this.#height)
-    }
-    click(mouseX, mouseY) {
-        if (this.#x <= mouseX && mouseX <= this.#x + this.#width && this.#y <= mouseY && mouseY <= this.#y + this.#height) {
-            this.#callback()
-        }
-    }
-}
-class Player {
-    #x
-    #y
-    #vX
-    #vY
-    #width
-    #height
-    #image
-    constructor(image, x, y, width, height) {
-        this.#x = x;
-        this.#y = y;
-        this.#vX = 0;
-        this.#vY = 0;
-        this.#width = width;
-        this.#height = height;
-        this.#image = image;
-    }
-    getX() {
-        return this.#x;
-    }
-    setX(x) {
-        this.#x = x;
-    }
-    getY() {
-        return this.#y;
-    }
-    setY(y) {
-        this.#y = y;
-    }
-    getVX() {
-        return this.#vX;
-    }
-    getVY() {
-        return this.#vY;
-    }
-    setVX(vX) {
-        this.#vX = vX;
-    }
-    setVY(vY) {
-        this.#vY = vY;
-    }
-    draw(canvas) {
-        this.#x += this.#vX;
-        this.#y += this.#vY;
-        canvas.drawImage(this.#image, this.#x, this.#y, this.#width, this.#height);
-    }
-}
+import * as sprites from "./sprites.js"
 
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+var speed = 7;
 var panel = 0; // 0 = Main menu, 1 = in game, 2 = game over screen
+var runTime = 0;
+var pickedUp = 0;
+var delay = 60; // spawn delay
 var aPressed = false;
 var dPressed = false;
 var wPressed = false;
 var sPressed = false;
 
 var buttons0 = []
-buttons0.push(new Button(document.getElementById("button"), "Play", canvas.width / 2 - 50, canvas.height / 2 - 100, 100, 50, function() {
+var trash = []
+buttons0.push(new sprites.Button(document.getElementById("button"), "Play", canvas.width / 2 - 50, canvas.height / 2 - 100, 100, 50, function() {
     panel = 1
 }))
-var player = new Player(document.getElementById("player"), canvas.width/2, canvas.height/2, 50, 50)
+var player = new sprites.Player(document.getElementById("player"), canvas.width/2, canvas.height/2, 50, 50)
+
+//Check if player is colliding if moving with velocity vX and vY
 
 function draw() {
+    if (!document.querySelector('#game').classList.contains('active')) {
+        panel = 0
+        speed = 7
+        runTime = 0
+        pickedUp = 0
+        delay = 60
+        trash = [];
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
     if (panel == 0) {
@@ -99,26 +41,73 @@ function draw() {
         })
     }
     else if (panel == 1) {
+        runTime++;
+        for(var i = 0; i < trash.length; i++) {
+            trash[i].draw(ctx)
+            if (player.canPickUp(trash[i])) {
+                trash.splice(i, 1);
+                pickedUp++;
+            }
+        }
         player.draw(ctx)
+
+        if (runTime % delay == 0) {
+            for (var i = 0; i < Math.round(Math.random() * 4 + 1); i++) {
+                let x = Math.random() * (canvas.width - 50) + 25;
+                let y = Math.random() * (canvas.height - 50) + 25;
+                let radius = Math.random() * 10 + 15;
+                trash.push(new sprites.Trash(document.getElementById("trash"), x, y, radius, radius))
+            }
+        }
+        if (runTime % 600 == 0) {
+            speed ++;
+            delay = Math.floor(delay * 0.9 + 1);
+        }
+
+        //Player controls
         if (wPressed || sPressed) {
-            if (wPressed)
-                player.setVY(-5);
-            if (sPressed)
-            player.setVY(5);
+            if (wPressed) {
+                if (!player.isColliding(canvas, 0, -speed))
+                    player.setVY(-speed);
+                else
+                    player.setVY(0);
+            }
+            if (sPressed) {
+                if (!player.isColliding(canvas, 0, speed))
+                    player.setVY(speed);
+                else
+                    player.setVY(0);
+            }
         } else
             player.setVY(player.getVY() * 0.5);
         if (aPressed || dPressed) {
-            if (aPressed)
-                player.setVX(-5);
-            if (dPressed)
-                player.setVX(5);
+            if (aPressed) {
+                if (!player.isColliding(canvas, -speed, 0))
+                    player.setVX(-speed);
+                else
+                    player.setVX(0);
+            }
+            if (dPressed) {
+                if (!player.isColliding(canvas, speed, 0))
+                    player.setVX(speed);
+                else
+                    player.setVX(0)
+            }
         } else
             player.setVX(player.getVX() * 0.5);
 
+        ctx.fillStyle = 'white'
+        ctx.textAlign = "left"
+        ctx.fillText("Garbage Count: " + trash.length, 50, 50)
+        ctx.fillText("Picked Up: " + pickedUp, 50, 75)
+        let minutes = Math.floor(runTime / 3600);
+        let seconds = Math.floor(runTime / 60) - minutes*60;
+        ctx.fillText("Time elapsed: " + minutes + ":" + (seconds < 10 ? "0" + seconds : seconds), 50, 100)
     }
+    
     ctx.closePath();
 }
-setInterval(draw, 10);
+setInterval(draw, 1/60 * 1000);
 
 canvas.addEventListener('click', function(event) {
     if (document.querySelector('#game').classList.contains('active')) {
